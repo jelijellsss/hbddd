@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>hbd kakakkuu</title>
+    <style>
+        :root {
+            --bg: #fff0f6;
+            --accent: #ff6fb5;
+            --accent-2: #ff9fcc;
+            --muted: #6b6b6b;
+            --card: #ffffff;
+            --glass: rgba(255, 255, 255, 0.6);
+            --shadow: 0 10px 30px rgba(255, 107, 176, 0.12);
+            font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(180deg, var(--bg), #ffeef8);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #222
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 20px auto;
+            padding: 18px
+        }
+
+        .card {
+            background: linear-gradient(180deg, var(--card), #fff);
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(6px)
+        }
+
+        .pages {
+            position: relative;
+            overflow: hidden;
+            border-radius: 14px
+        }
+
+        .page {
+            min-height: 60vh;
+            padding: 28px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center
+        }
+
+        .page.active {
+            display: flex;
+            animation: fadeIn .6s ease
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        header {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px
+        }
+
+        .title {
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .logo {
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 22px;
+            box-shadow: 0 6px 20px rgba(255, 111, 181, 0.18)
+        }
+
+        h1 {
+            font-size: 20px;
+            margin: 0
+        }
+
+        p.lead {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+  
+        .controls {
+            display: flex;
+            gap: 10px;
+            align-items: center
+        }
+
+        button.btn {
+            border: 0;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(255, 111, 181, 0.14)
+        }
+
+        button.ghost {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid rgba(255, 111, 181, 0.12)
+        }
+
+        .big-emoji {
+            font-size: 64px;
+            margin-bottom: 6px
+        }
+
+        .message {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 6px 0
+        }
+
+        .sub {
+            font-size: 15px;
+            color: var(--muted);
+            max-width: 720px;
+            margin: 0 auto
+        }
+
+        .photos {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 12px
+        }
+
+        .photo {
+            width: 160px;
+            height: 160px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border: 6px solid rgba(255, 255, 255, 0.7)
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block
+        }
+
+        .floating-hearts {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 100
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 18px;
+            opacity: 0.9;
+            animation: floatUp 6s linear infinite
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(20vh) scale(0.8);
+                opacity: 0
+            }
+
+            20% {
+                opacity: 1
+            }
+
+            100% {
+                transform: translateY(-30vh) scale(1.2);
+                opacity: 0
+            }
+        }
+
+        /* Slideshow */
+        .slideshow {
+            width: 100%;
+            max-width: 760px;
+            margin: 0 auto;
+            border-radius: 14px;
+            overflow: hidden
+        }
+
+        .slide {
+            display: none
+        }
+
+        .slide.active {
+            display: block
+        }
+
+        /* Surprise confetti */
+        canvas.confetti {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 200
+        }
+
+        /* Responsive */
+        @media (max-width:640px) {
+            .photo {
+                width: 120px;
+                height: 120px
+            }
+
+            .message {
+                font-size: 18px
+            }
+
+            .logo {
+                width: 48px;
+                height: 48px;
+                font-size: 20px
+            }
+        }
+
+        /* Footer nav */
+        .nav {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            padding: 14px
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ffd6ea;
+            opacity: 0.6
+        }
+
+        .dot.active {
+            background: var(--accent);
+            opacity: 1
+        }
+
+        /* Cute badge */
+        .badge {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #fff, #fff8);
+            box-shadow: 0 6px 20px rgba(255, 111, 181, 0.08);
+            font-weight: 700
+        }
+
+        /* audio control */
+        .audioCtrl {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .audioCtrl button {
+            padding: 8px;
+            border-radius: 10px;
+            border: 0;
+            background: var(--accent-2);
+            color: white
+        }
+
+        /* card-like message */
+        \  .wishCard {
+            background: linear-gradient(180deg, #fff, #fff8);
+            padding: 18px;
+            border-radius: 14px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            max-width: 720px
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="floating-hearts" id="hearts"></div>
+    <canvas class="confetti" id="confettiCanvas"></canvas>
+
+    <div class="container">
+        <div class="card">
+            <header>
+                <div class="title">
+                    <div class="logo">❤</div>
+                    <div>
+                        <h1>ini agak alayy sii wkwk</h1>
+                        <p class="lead">soalnya aku buat ini pake hatii, kiww</p>
+                    </div>
+                </div>
+                <div class="controls">
+                    <div class="audioCtrl">
+                        <audio id="bgm" src="assets/Bazzi - Beautiful feat. Camila [Official Audio] - Bazzi.mp3"
+                            preload="auto"></audio>
+                        <button id="playBtn" class="ghost">Play Lagu</button>
+                    </div>
+                    <button id="openAll" class="btn">Mulai Surprise</button>
+                </div>
+            </header>
+
+            <div class="pages">
+                <!-- Page 1: Intro -->
+                <section class="page active" data-page="1">
+                    <div class="big-emoji">🎉🎂</div>
+                    <div class="message">Happy 23rd Birthday, kak Damee!🩷✨</div>
+                    <p class="sub">IHHH udahh besarr diaaa🤩, tapi aku ngerasa umurmu ajaa sih kak yg bertambah, soalnya
+                        muka mu still young like teenager😙</p>
+                    <div class="photos" style="margin-top:18px">
+                        <div class="photo"><img src="assets/ft1.jpg" alt="Kakak"></div>
+                        <div class="photo"><img src="assets/ft2.jpg" alt="pretty nyaa"></div>
+                    </div>
+                </section>
+
+                <!-- Page 2: Wishes -->
+                <section class="page" data-page="2">
+                    <div class="wishCard">
+                        <h2 style="margin-top:0">For kakakkuu,</h2>
+                        <p style="font-size:16px;margin-bottom:8px">Selamat ulang tahun kak damm, Umur 23 hanyalah
+                            angka, kau tetap 17 kok dimataku🤩 Sehat sehat dan bahagia terus yaaa💗 Loppyuu kakak
+                            tercantik di se-<strong>seluruh
+                                dunia</strong> 💕</p>
+                        <p style="color:var(--muted);margin-bottom:6px">— Dari jelitaa maniezz</p>
+                    </div>
+                    <div style="height:18px"></div>
+                    <button class="btn" onclick="triggerConfetti()">Buka Kejutan!</button>
+                </section>
+
+                <!-- Page 3: Slideshow / Memories -->
+                <section class="page" data-page="3">
+                    <h2>Fotoo kita niii</h2>
+                    <p>asliii kita jarang kali fotooo</p>
+                    <div class="slideshow">
+                        <div class="slide active"><img src="assets/ft3.jpg"
+                                style="width:100%;height:360px;object-fit:cover;display:block" alt="mem1"></div>
+                        <div class="slide"><img src="assets/ft5.jpg"
+                                style="width:100%;height:360px;object-fit:cover;display:block" alt="mem2"></div>
+                        <div class="slide"><img src="assets/ft7.jpg"
+                                style="width:100%;height:360px;object-fit:cover;display:block" alt="mem3"></div>
+                    </div>
+                    <div style="height:12px"></div>
+                    <div class="nav"><button class="ghost" onclick="prevSlide()">Prev</button><button class="ghost"
+                            onclick="nextSlide()">Next</button></div>
+                </section>
+
+                <!-- Page 4: Surprise Big Message -->
+                <section class="page" data-page="4">
+                    <div style="max-width:700px">
+                        <h2>Kata kata hari ini kak Dam!</h2>
+                        <p class="sub">Hari ini vibes-nya kayak bedaa gitu yaa, kayak ada seseorang yang lagi jadi main starr✨. Siapa lagi kalo bukan kamuuu🫣 *ga nyambung coo😭
+                        </p>
+                        <div style="height:12px"></div>
+                        <div class="wishCard">
+                            <h3>Untuk Kakakku,</h3>
+                            <p>Halooo kakk! Selamat ulang tahun buat yg kesekian kalinya wkwk. Makasii ya udah bertahan sampai saat inii. Makasii yaa udah jadi kuat seperti wonder womann💗</p>
+                            <p>Semoga umur ini jadi umur yang baik buat mu, Semoga semua wish dan goals mu tercapaii.Semoga bisa jadii best age everrr!!! </p>
+                            <p>Big arigatoo yaa sudah menjadi kakakkuu. aslii enak loh punya kakakk. *pasti kamu irii yaaaa🤗. Apapun yg terjadi, be strongg yaaa, aku yakin kalii something WOWW sedang menunggu mu disanaa🤩🩷</p>
+                            <p style="text-align:right;margin:0">— dari adikmu, yang paling manis sedunia♥</p>
+                            <p style="text-align:right;margin:0">— Dengan seluruh cintaa dan kasih sayangg, eaa ❤️</p>
+                        </div>
+                        <div style="height:12px"></div>
+                        <button class="btn" onclick="sendHeartShower()">ini lope lope buat mu</button>
+                    </div>
+                </section>
+
+                <!-- Page 5: Closing / Share -->
+                <section class="page" data-page="5">
+                    <h2>Makasii udah baca sampe abiss!</h2>
+                    <p class="sub">Walau absurd, aneh, alay, bikin muall wkwkk. tapi aku harap bisa jadi kado laa yaa walau ga ada apa apanyaaa 🥹</p>
+                    <div style="height:10px"></div>
+                    <button class="ghost" onclick="restart()">Buka Lagi</button>
+                </section>
+
+            </div><!-- pages end -->
+
+            <div style="height:10px"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+                <div style="display:flex;gap:8px;align-items:center"><button id="prev"
+                        class="ghost">Prev</button><button id="next" class="btn">Next</button></div>
+                <div class="nav" id="dots"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Basic app state ---
+        const pages = Array.from(document.querySelectorAll('.page'));
+        let current = 0;
+
+        // build dots
+        const dots = document.getElementById('dots');
+        pages.forEach((p, i) => { const d = document.createElement('div'); d.className = 'dot' + (i === 0 ? ' active' : ''); d.addEventListener('click', () => goTo(i)); dots.appendChild(d) });
+
+        function show() {
+            pages.forEach((p, i) => p.classList.toggle('active', i === current));
+            Array.from(dots.children).forEach((d, i) => d.classList.toggle('active', i === current));
+        }
+        document.getElementById('next').addEventListener('click', () => { current = Math.min(pages.length - 1, current + 1); show() });
+        document.getElementById('prev').addEventListener('click', () => { current = Math.max(0, current - 1); show() });
+        document.getElementById('openAll').addEventListener('click', () => { current = 0; show(); document.getElementById('bgm').play().catch(() => { }); });
+
+        function goTo(i) { current = i; show() }
+
+        // --- Audio controls ---
+        const bgm = document.getElementById('bgm');
+        const playBtn = document.getElementById('playBtn');
+        playBtn.addEventListener('click', () => {
+            if (bgm.paused) { bgm.play(); playBtn.textContent = 'Pause Lagu' } else { bgm.pause(); playBtn.textContent = 'Play Lagu' }
+        });
+
+        // --- Confetti (simple) ---
+        const canvas = document.getElementById('confettiCanvas');
+        const ctx = canvas.getContext('2d');
+        function resizeCanvas() { canvas.width = innerWidth; canvas.height = innerHeight }
+        window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+        let confettiParticles = [];
+        function spawnConfetti(amount = 80) {
+            for (let i = 0; i < amount; i++) {
+                confettiParticles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - 50,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: Math.random() * 6 + 2,
+                    r: Math.random() * 6 + 6,
+                    color: ['#ff6fb5', '#ffd6ea', '#ffd59f', '#ff9fcc'][Math.floor(Math.random() * 4)],
+                    rot: Math.random() * 360,
+                    speed: Math.random() * 6 + 2
+                });
+            }
+        }
+        function updateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = confettiParticles.length - 1; i >= 0; i--) { const p = confettiParticles[i]; p.x += p.vx; p.y += p.vy; p.vy += 0.12; p.rot += p.vx * 2; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180); ctx.fillStyle = p.color; ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r / 2); ctx.restore(); if (p.y > canvas.height + 50) { confettiParticles.splice(i, 1) } }
+            requestAnimationFrame(updateConfetti);
+        }
+        updateConfetti();
+
+        function triggerConfetti() { spawnConfetti(140) }
+
+        // --- Floating hearts ---
+        const heartsEl = document.getElementById('hearts');
+        function makeHeart() {
+            const el = document.createElement('div'); el.className = 'heart'; el.style.left = (Math.random() * 100) + '%'; el.style.top = (80 + Math.random() * 20) + '%'; el.style.fontSize = (12 + Math.random() * 28) + 'px'; el.style.opacity = Math.random(); el.textContent = '💖'; heartsEl.appendChild(el);
+            setTimeout(() => el.remove(), 7000);
+        }
+        setInterval(makeHeart, 700);
+
+        // --- Slideshow ---
+        const slides = Array.from(document.querySelectorAll('.slideshow .slide'));
+        let sIndex = 0;
+        function showSlide() { slides.forEach((s, i) => s.classList.toggle('active', i === sIndex)) }
+        function nextSlide() { sIndex = (sIndex + 1) % slides.length; showSlide() }
+        function prevSlide() { sIndex = (sIndex - 1 + slides.length) % slides.length; showSlide() }
+        showSlide();
+        // auto advance
+        setInterval(() => { sIndex = (sIndex + 1) % slides.length; showSlide() }, 4000);
+
+        // Expose to global for buttons
+        window.nextSlide = nextSlide; window.prevSlide = prevSlide; window.triggerConfetti = triggerConfetti;
+
+        // --- Heart shower visual ---
+        function sendHeartShower() {
+            for (let i = 0; i < 40; i++) { setTimeout(() => { const el = document.createElement('div'); el.className = 'heart'; el.style.left = (10 + Math.random() * 80) + '%'; el.style.top = (40 + Math.random() * 40) + '%'; el.style.fontSize = (14 + Math.random() * 36) + 'px'; el.textContent = '❤️'; document.body.appendChild(el); setTimeout(() => el.remove(), 4000) }, i * 60) }
+            triggerConfetti();
+        }
+        window.sendHeartShower = sendHeartShower;
+
+        // --- Download screenshot (simple) ---
+        function downloadCard() {
+            alert('Fitur simpan: di browser mobile, pakai screenshot. Di desktop, simpan halaman (Ctrl+S) atau gunakan ekstensi.');
+        }
+
+        // --- Restart ---
+        function restart() { current = 0; show(); }
+
+        // --- Tiny accessibility nicety: keyboard nav ---
+        window.addEventListener('keydown', e => { if (e.key === 'ArrowRight') document.getElementById('next').click(); if (e.key === 'ArrowLeft') document.getElementById('prev').click() });
+
+        // Pre-flight: if audio autoplay blocked, user must press play
+        bgm.addEventListener('play', () => playBtn.textContent = 'Pause Lagu');
+        bgm.addEventListener('pause', () => playBtn.textContent = 'Play Lagu');
+
+    </script>
+</body>
+
+</html>
